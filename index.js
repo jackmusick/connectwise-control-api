@@ -143,7 +143,7 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
 
         getSessionGroups = async () => {
             const params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/SessionGroupService.ashx/GetSessionGroups`,
                 jar,
                 json: true
@@ -156,7 +156,7 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
 
         getSessions = async () => {
             const params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/PageService.ashx/GetHostSessionInfo`,
                 jar,
                 body: [2, null, null, null, 3, null],
