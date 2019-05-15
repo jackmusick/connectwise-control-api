@@ -103,7 +103,7 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
          */
         getAgentDownload = async (organization) => {
             let params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/ExtensionService.ashx/GetInstanceUserInfo`,
                 jar,
                 json: true
