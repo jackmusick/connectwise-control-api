@@ -10,7 +10,7 @@ The goal is include all of the features available in the web interface such as r
 
 # Requirements
 
-This project uses async/await, so I'd recommend using NodeJS 8.11.2 (LTS).
+This project uses async/await, so I'd recommend using at least NodeJS 8.11.2 (LTS). Additionally, you'll need admin credentials to ConnectWise Control that aren't using 2FA.
 
 # Getting Started
 
