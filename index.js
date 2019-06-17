@@ -98,12 +98,9 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
             await this.saveSessionGroups(updatedGroups);
         };
 
-        /**
-         * @param {string} organization - The organization you want the agent to be assigned to.
-         */
-        getAgentDownload = async (organization) => {
+        getInstanceInfo = async () => {
             let params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/ExtensionService.ashx/GetInstanceUserInfo`,
                 jar,
                 json: true
@@ -118,14 +115,25 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
             const instanceKey = instanceInfo.publicKey;
             const instance = `instance-${licenseInfo.LicenseRuntimeInfos[0].LicenseID}-relay.screenconnect.com`; // For now.
 
+            return {
+                instanceKey,
+                instance
+            };
+        };
+
+        /**
+         * @param {string} organization - The organization you want the agent to be assigned to.
+         */
+        getAgentDownload = async (organization) => {
+            let instanceInfo = await this.getInstanceInfo();
             // Resetting params for agent download
             params = {
                 method: 'GET',
                 uri: `${instanceUrl}/Bin/ConnectWiseControl.ClientSetup.msi`,
                 qs: {
-                    h: instance,
+                    h: instanceInfo.instance,
                     p: '443',
-                    k: instanceKey,
+                    k: instanceInfo.instanceKey,
                     e: 'Access',
                     y: 'Guest',
                     t: '',
@@ -143,7 +151,7 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
 
         getSessionGroups = async () => {
             const params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/SessionGroupService.ashx/GetSessionGroups`,
                 jar,
                 json: true
@@ -156,11 +164,11 @@ module.exports = function ConnectWiseControl(instanceUrl, username, password) {
 
         getSessions = async () => {
             const params = {
-                method: 'POST',
+                method: 'GET',
                 uri: `${instanceUrl}/Services/PageService.ashx/GetHostSessionInfo`,
                 jar,
-                body: [2, null, null, null, 3, null],
-                json: true
+                json: true,
+                body: [2, null, null, null, 3, null]
             };
 
             const res = await rp(params);
